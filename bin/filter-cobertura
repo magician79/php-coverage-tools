@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use CoverageTools\Php\Cobertura\FilterCobertura;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+if ($argc !== 3) {
+    fwrite(STDERR, "Usage: filter-cobertura <input.xml> <output.xml>\n");
+    exit(1);
+}
+
+$inputFile = $argv[1];
+$outputFile = $argv[2];
+
+try {
+    FilterCobertura::run($inputFile, $outputFile);
+} catch (Throwable $e) {
+    fwrite(STDERR, $e->getMessage() . PHP_EOL);
+    exit(2);
+}
