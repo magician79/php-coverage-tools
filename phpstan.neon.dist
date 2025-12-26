@@ -1,0 +1,7 @@
+includes:
+  - vendor/magician79/coding-standard/phpstan/pragmatic.neon.dist
+
+parameters:
+  reportUnmatchedIgnoredErrors: false
+  excludePaths:
+    - vendor/*
