@@ -35,7 +35,7 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.3",
-    "ext-simplexml": "*"
+    "ext-dom": "*"
   },
   "require-dev": {
     "magician79/coding-standard": "^2.0"

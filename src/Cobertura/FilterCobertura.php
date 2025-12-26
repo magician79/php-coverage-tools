@@ -4,59 +4,83 @@ declare(strict_types=1);
 
 namespace CoverageTools\Php\Cobertura;
 
-use Exception;
+use DOMDocument;
+use DOMElement;
 use RuntimeException;
-use SimpleXMLElement;
 
-use function file_get_contents;
-use function file_put_contents;
-use function fwrite;
 use function is_file;
-use function sprintf;
-
-use const PHP_EOL;
-use const STDERR;
 
 final class FilterCobertura
 {
-    /** @throws Exception */
-    public static function run(string $input, string $output) : void
+    public static function run(string $inputFile, string $outputFile) : void
     {
-        if (! is_file($input)) {
-            throw new RuntimeException(sprintf('Input file not found: %s', $input));
+        if (! is_file($inputFile)) {
+            throw new RuntimeException('Input file does not exist: ' . $inputFile);
         }
 
-        $xml = new SimpleXMLElement(file_get_contents($input));
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
 
-        $removed = 0;
+        if ($dom->load($inputFile) === false) {
+            throw new RuntimeException('Failed to parse Cobertura XML');
+        }
 
-        foreach ($xml->packages->package as $package) {
-            foreach ($package->classes->class as $i => $class) {
-                if ((int) $class['lines-valid'] !== 0) {
-                    continue;
-                }
+        $packages = $dom->getElementsByTagName('package');
 
-                unset($package->classes->class[$i]);
-                $removed++;
+        /** @var DOMElement[] $toRemove */
+        $toRemove = [];
+
+        foreach ($packages as $package) {
+            if (! self::isNonExecutablePackage($package)) {
+                continue;
+            }
+
+            $toRemove[] = $package;
+        }
+
+        foreach ($toRemove as $package) {
+            $package->parentNode?->removeChild($package);
+        }
+
+        // Self-check: ensure no non-executable packages remain
+        foreach ($dom->getElementsByTagName('package') as $package) {
+            if (self::isNonExecutablePackage($package)) {
+                throw new RuntimeException(
+                    'Non-executable package leaked into filtered coverage: ' .
+                    $package->getAttribute('name'),
+                );
             }
         }
 
-        // Self-check: ensure no non-executable files remain
-        foreach ($xml->packages->package as $package) {
-            foreach ($package->classes->class as $class) {
-                if ((int) $class['lines-valid'] === 0) {
-                    throw new RuntimeException(
-                        sprintf('Non-executable file leaked into filtered coverage: %s', $class['filename']),
-                    );
-                }
+        if ($dom->save($outputFile) === false) {
+            throw new RuntimeException('Failed to write filtered Cobertura file');
+        }
+    }
+
+    private static function isNonExecutablePackage(DOMElement $package) : bool
+    {
+        $lineRate = (float) $package->getAttribute('line-rate');
+        $complexity = (int) $package->getAttribute('complexity');
+
+        // Fast path: executable by definition
+        if ($lineRate > 0.0 || $complexity > 0) {
+            return false;
+        }
+
+        // Future-proofing: if Cobertura emitted any executable lines, keep it
+        if ($package->getElementsByTagName('line')->length > 0) {
+            return false;
+        }
+
+        // Cobertura marks interfaces / pure contracts as empty <classes/>
+        foreach ($package->childNodes as $child) {
+            if ($child instanceof DOMElement && $child->tagName === 'classes') {
+                return ! $child->hasChildNodes();
             }
         }
 
-        file_put_contents($output, $xml->asXML());
-
-        fwrite(
-            STDERR,
-            sprintf('Filtered Cobertura: removed %s non-executable files%s', $removed, PHP_EOL),
-        );
+        // Defensive default: keep the package
+        return false;
     }
 }

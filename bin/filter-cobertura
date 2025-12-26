@@ -5,7 +5,26 @@ declare(strict_types=1);
 
 use CoverageTools\Php\Cobertura\FilterCobertura;
 
-require __DIR__ . '/../../../autoload.php';
+$autoloadFound = false;
+
+$autoloadPaths = [
+    __DIR__ . '/../vendor/autoload.php', // when running inside the repo
+    __DIR__ . '/../../../autoload.php', // when installed via Composer
+];
+
+foreach ($autoloadPaths as $file) {
+    if (file_exists($file)) {
+        require_once $file;
+        $autoloadFound = true;
+
+        break;
+    }
+}
+
+if ($autoloadFound === false) {
+    fwrite(STDERR,"Unable to locate Composer autoload.php. Did you run composer install?\n");
+    exit(1);
+}
 
 if ($argc !== 3) {
     fwrite(STDERR, "Usage: filter-cobertura <input.xml> <output.xml>\n");
