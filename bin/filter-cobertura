@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 use CoverageTools\Php\Cobertura\FilterCobertura;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../../autoload.php';
 
 if ($argc !== 3) {
     fwrite(STDERR, "Usage: filter-cobertura <input.xml> <output.xml>\n");
