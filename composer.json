@@ -29,7 +29,8 @@
     "lock": false,
     "sort-packages": true,
     "allow-plugins": {
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true
     }
   },
   "prefer-stable": true,
@@ -38,7 +39,8 @@
     "ext-dom": "*"
   },
   "require-dev": {
-    "magician79/coding-standard": "^2.0"
+    "magician79/coding-standard": "^2.0",
+    "pestphp/pest": "^4.2"
   },
   "scripts": {
     "lint": "parallel-lint --exclude vendor .",
@@ -47,10 +49,12 @@
     "cs:strict": "phpcs --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
     "cs:strict-fix": "phpcbf --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
     "stan": "phpstan analyse -c phpstan.neon.dist src",
+    "test": "pest",
     "check": [
       "@lint",
       "@cs",
-      "@stan"
+      "@stan",
+      "@test"
     ]
   }
 }
