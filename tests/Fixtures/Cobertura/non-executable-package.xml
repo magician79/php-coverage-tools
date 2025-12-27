@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage>
+    <packages>
+        <package
+                name="GraphQL/SchemaProvider.php"
+                line-rate="0"
+                branch-rate="0"
+                complexity="0"
+        >
+            <classes/>
+        </package>
+    </packages>
+</coverage>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage>
+    <packages>
+        <package
+                name="GraphQL/ErrorsHandler.php"
+                line-rate="1"
+                branch-rate="0"
+                complexity="1"
+        >
+            <classes>
+                <class
+                        name="ErrorsHandler"
+                        filename="GraphQL/ErrorsHandler.php"
+                >
+                    <lines>
+                        <line number="10" hits="1"/>
+                    </lines>
+                </class>
+            </classes>
+        </package>
+    </packages>
+</coverage>
