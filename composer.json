@@ -48,7 +48,7 @@
     "cs-fix": "phpcbf",
     "cs:strict": "phpcs -p --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
     "cs:strict-fix": "phpcbf --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
-    "stan": "phpstan analyse -c phpstan.neon.dist src",
+    "stan": "phpstan analyse",
     "test": "pest",
     "check": [
       "@lint",
