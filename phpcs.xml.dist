@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset name="php-coverage-tools">
+
+    <arg value="p"/>
+
+    <!-- What to scan -->
+    <file>bin</file>
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- What to ignore -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <!-- File types -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Default: Pragmatic rules -->
+    <rule ref="vendor/magician79/coding-standard/ruleset/phpcs.pragmatic.xml"/>
+
+    <!-- Test-specific allowances -->
+    <rule ref="SlevomatCodingStandard.Functions.StaticClosure">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+</ruleset>

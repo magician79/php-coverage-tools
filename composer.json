@@ -44,9 +44,9 @@
   },
   "scripts": {
     "lint": "parallel-lint --exclude vendor .",
-    "cs": "phpcs --standard=vendor/magician79/coding-standard/ruleset/phpcs.pragmatic.xml --ignore=vendor/* bin src",
-    "cs-fix": "phpcbf --standard=vendor/magician79/coding-standard/ruleset/phpcs.pragmatic.xml --ignore=vendor/* bin src",
-    "cs:strict": "phpcs --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
+    "cs": "phpcs",
+    "cs-fix": "phpcbf",
+    "cs:strict": "phpcs -p --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
     "cs:strict-fix": "phpcbf --standard=vendor/magician79/coding-standard/ruleset/phpcs.strict.xml --ignore=vendor/* bin src",
     "stan": "phpstan analyse -c phpstan.neon.dist src",
     "test": "pest",
